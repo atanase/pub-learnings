@@ -13,5 +13,5 @@ func main() {
 	fmt.Println("And if you try to open a file:")
 	fmt.Println(os.Open("playground.go"))
 	fmt.Println("Or access the network:")
-	fmt.Println(net.Dial("tcp","google.com"))
+	fmt.Println(net.Dial("tcp", "google.com"))
 }
