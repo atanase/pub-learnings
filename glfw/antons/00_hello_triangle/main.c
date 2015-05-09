@@ -1,7 +1,8 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <stdio.h>
+#include <iostream>
+#include <cstdlib>
 
 int main() {
     GLFWwindow *window = nullptr;
@@ -32,9 +33,9 @@ int main() {
     GLuint vs, fs;
     GLuint shader_programme;
     
-    if( !glfwInit() ){
-        fprintf(stderr, "ERROR: could not start GLFW3\n");
-        return 1;
+    if (!glfwInit ()) {
+        std::cerr << "ERROR: could not start GLFW3" << std::endl;
+        return EXIT_FAILURE;
     }
     
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -42,21 +43,21 @@ int main() {
     glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow ( 640, 480, "Hello Triangle", nullptr, nullptr);
-    glfwMakeContextCurrent(window);
+    window = glfwCreateWindow (640, 480, "Hello Triangle", nullptr, nullptr);
+    glfwMakeContextCurrent (window);
     if (!window) {
-        fprintf (stderr, "ERROR: could not open window with GLFW3\n");
-        glfwTerminate();
-        return 1;
+        std::cerr << "ERROR: could not open window with GLFW3" << std::endl;
+        glfwTerminate ();
+        return EXIT_FAILURE;
     }
     
     glewExperimental = GL_TRUE;
-    glewInit();
+    glewInit ();
     
     renderer = glGetString (GL_RENDERER);
     version = glGetString (GL_VERSION);
-    printf ("Renderer: %s\n", renderer);
-    printf ("OpenGL version supported %s\n", version);
+    std::cout << "Renderer: " << renderer << std::endl;
+    std::cout << "OpenGL version supported " << version << std::endl;
 
     glEnable (GL_DEPTH_TEST);
     glDepthFunc (GL_LESS);
@@ -69,13 +70,13 @@ int main() {
     glBindVertexArray (vao);
     glEnableVertexAttribArray (0);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     vs = glCreateShader (GL_VERTEX_SHADER);
-    glShaderSource (vs, 1, &vertex_shader, NULL);
+    glShaderSource (vs, 1, &vertex_shader, nullptr);
     glCompileShader (vs);
     fs = glCreateShader (GL_FRAGMENT_SHADER);
-    glShaderSource (fs, 1, &fragment_shader, NULL);
+    glShaderSource (fs, 1, &fragment_shader, nullptr);
     glCompileShader (fs);
     shader_programme = glCreateProgram ();
     glAttachShader (shader_programme, fs);
@@ -90,6 +91,6 @@ int main() {
         glfwPollEvents ();
         glfwSwapBuffers (window);
     }
-    glfwTerminate();
-    return 0;
+    glfwTerminate ();
+    return EXIT_SUCCESS;
 }
