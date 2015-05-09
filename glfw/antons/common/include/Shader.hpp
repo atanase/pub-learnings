@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cstdlib>
 
 #include <GL/glew.h>
 
@@ -51,6 +52,7 @@ struct Shader
         {
             glGetShaderInfoLog (vs, 512, NULL, infoLog);
             std::cerr << "ERROR: vertex shader compilation failed.\n" << infoLog << std::endl;
+            std::exit (EXIT_FAILURE);
         }
 
         // fragment shader
@@ -63,6 +65,7 @@ struct Shader
         {
             glGetShaderInfoLog (fs, 512, NULL, infoLog);
             std::cerr << "ERROR: fragment shader compilation failed.\n" << infoLog << std::endl;
+            std::exit (EXIT_FAILURE);
         }
 
         this->prog = glCreateProgram ();
@@ -75,6 +78,7 @@ struct Shader
         {
             glGetProgramInfoLog (this->prog, 512, NULL, infoLog);
             std::cerr << "ERROR: shader program link failed.\n" << infoLog << std::endl;
+            std::exit (EXIT_FAILURE);
         }
         glDeleteShader (vs);
         glDeleteShader (fs);
