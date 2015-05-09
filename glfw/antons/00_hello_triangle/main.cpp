@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 // GLEW
 #define GLEW_STATIC
@@ -7,12 +8,14 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
-#include <cstdlib>
+#include "Shader.hpp"
 
-int main() {
+
+
+int main()
+{
     GLFWwindow *window = nullptr;
-    const GLubyte *renderer;
-    const GLubyte *version;
+
     GLuint vao;
     GLuint vbo;
 
@@ -22,23 +25,9 @@ int main() {
         -0.5f, -0.5f,  0.0f
     };
 
-    const char *vertex_shader =
-        "#version 450\n"
-        "in vec3 vp;"
-        "void main () {"
-        "    gl_Position = vec4(vp, 1.0);"
-        "}";
-    
-    const char *fragment_shader =
-        "#version 450\n"
-        "out vec4 frag_color;"
-        "void main () {"
-        "    frag_color = vec4(0.5, 0.0, 0.5, 1.0);"
-        "}";
-    GLuint vs, fs;
-    GLuint shader_programme;
-    
-    if (!glfwInit ()) {
+	// GLFW initialization
+    if (!glfwInit ())
+	{
         std::cerr << "ERROR: could not start GLFW3" << std::endl;
         std::exit (EXIT_FAILURE);
     }
@@ -50,18 +39,25 @@ int main() {
 
     window = glfwCreateWindow (640, 480, "Hello Triangle", nullptr, nullptr);
     glfwMakeContextCurrent (window);
-    if (!window) {
+
+    if (!window)
+	{
         std::cerr << "ERROR: could not open window with GLFW3" << std::endl;
         glfwTerminate ();
         std::exit (EXIT_FAILURE);
     }
     
+	// GLEW initialization
     glewExperimental = GL_TRUE;
-    if (glewInit () != GLEW_OK) {
+    if (glewInit () != GLEW_OK)
+	{
         std::cerr << "ERROR: could not start GLEW" << std::endl;
         std::exit (EXIT_FAILURE);
     }
-    
+ 
+	// output: renderer and version 
+    const GLubyte *renderer;
+    const GLubyte *version;
     renderer = glGetString (GL_RENDERER);
     version = glGetString (GL_VERSION);
     std::cout << "Renderer: " << renderer << std::endl;
@@ -79,26 +75,20 @@ int main() {
     glEnableVertexAttribArray (0);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	
+	// attach shaders
+	Shader shader("shaders/base.vert", "shaders/base.frag");
 
-    vs = glCreateShader (GL_VERTEX_SHADER);
-    glShaderSource (vs, 1, &vertex_shader, nullptr);
-    glCompileShader (vs);
-    fs = glCreateShader (GL_FRAGMENT_SHADER);
-    glShaderSource (fs, 1, &fragment_shader, nullptr);
-    glCompileShader (fs);
-    shader_programme = glCreateProgram ();
-    glAttachShader (shader_programme, fs);
-    glAttachShader (shader_programme, vs);
-    glLinkProgram (shader_programme);
-
-    while (!glfwWindowShouldClose (window) ) {
+    while (!glfwWindowShouldClose (window))
+	{
         glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUseProgram (shader_programme);
+		shader.use ();
         glBindVertexArray (vao);
         glDrawArrays (GL_TRIANGLES, 0, 3);
         glfwPollEvents ();
         glfwSwapBuffers (window);
     }
-    glfwTerminate ();
+    
+	glfwTerminate ();
     std::exit (EXIT_SUCCESS);
 }
