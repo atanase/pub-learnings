@@ -19,15 +19,15 @@ int main()
     GLuint vao;
     GLuint vbo;
 
-    GLfloat points[] = {
+	GLfloat points[] = {
          0.0f,  0.5f,  0.0f,
          0.5f, -0.5f,  0.0f,
-        -0.5f, -0.5f,  0.0f
+         -0.5f, -0.5f,  0.0f
     };
 
-	// GLFW initialization
+    // GLFW initialization
     if (!glfwInit ())
-	{
+    {
         std::cerr << "ERROR: could not start GLFW3" << std::endl;
         std::exit (EXIT_FAILURE);
     }
@@ -41,21 +41,21 @@ int main()
     glfwMakeContextCurrent (window);
 
     if (!window)
-	{
+    {
         std::cerr << "ERROR: could not open window with GLFW3" << std::endl;
         glfwTerminate ();
         std::exit (EXIT_FAILURE);
     }
     
-	// GLEW initialization
+    // GLEW initialization
     glewExperimental = GL_TRUE;
     if (glewInit () != GLEW_OK)
-	{
+    {
         std::cerr << "ERROR: could not start GLEW" << std::endl;
         std::exit (EXIT_FAILURE);
     }
  
-	// output: renderer and version 
+    // output: renderer and version 
     const GLubyte *renderer;
     const GLubyte *version;
     renderer = glGetString (GL_RENDERER);
@@ -75,20 +75,20 @@ int main()
     glEnableVertexAttribArray (0);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-	
-	// attach shaders
-	Shader shader("shaders/base.vert", "shaders/base.frag");
+    
+    // attach shaders
+    Shader shader("shaders/base.vert", "shaders/base.frag");
 
     while (!glfwWindowShouldClose (window))
-	{
+    {
         glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shader.use ();
+        shader.use ();
         glBindVertexArray (vao);
         glDrawArrays (GL_TRIANGLES, 0, 3);
         glfwPollEvents ();
         glfwSwapBuffers (window);
     }
     
-	glfwTerminate ();
+    glfwTerminate ();
     std::exit (EXIT_SUCCESS);
 }
