@@ -18,14 +18,14 @@ int main() {
     };
 
     const char *vertex_shader =
-        "#version 410\n"
+        "#version 450\n"
         "in vec3 vp;"
         "void main () {"
         "    gl_Position = vec4(vp, 1.0);"
         "}";
     
     const char *fragment_shader =
-        "#version 410\n"
+        "#version 450\n"
         "out vec4 frag_color;"
         "void main () {"
         "    frag_color = vec4(0.5, 0.0, 0.5, 1.0);"
@@ -52,7 +52,10 @@ int main() {
     }
     
     glewExperimental = GL_TRUE;
-    glewInit ();
+    if (glewInit () != GLEW_OK) {
+        std::cerr << "ERROR: could not start GLEW" << std::endl;
+        return EXIT_FAILURE;
+    }
     
     renderer = glGetString (GL_RENDERER);
     version = glGetString (GL_VERSION);
