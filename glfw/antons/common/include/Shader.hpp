@@ -22,7 +22,11 @@ struct Shader
         {
             std::ifstream vFile (vPath);
             std::ifstream fFile (fPath);
+            vFile.exceptions (std::ios::failbit);
+            fFile.exceptions (std::ios::failbit);
             std::stringstream vStream, fStream;
+            vStream.exceptions (std::ios::failbit);
+            fStream.exceptions (std::ios::failbit);
             vStream << vFile.rdbuf ();
             fStream << fFile.rdbuf ();
             vFile.close ();
@@ -33,7 +37,8 @@ struct Shader
         }
         catch (std::exception e)
         {
-            std::cerr << "ERROR: Shader file can't successfully read" << std::endl;
+            std::cerr << "ERROR: Shader file can't read successfully." << std::endl;
+            std::exit (EXIT_FAILURE);
         }
         const GLchar *vsString = vString.c_str ();
         const GLchar *fsString = fString.c_str ();
