@@ -1,7 +1,12 @@
+#include <iostream>
+
+// GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
+
+// GLFW
 #include <GLFW/glfw3.h>
-#include <iostream>
+
 #include <cstdlib>
 
 int main() {
@@ -35,7 +40,7 @@ int main() {
     
     if (!glfwInit ()) {
         std::cerr << "ERROR: could not start GLFW3" << std::endl;
-        return EXIT_FAILURE;
+        std::exit (EXIT_FAILURE);
     }
     
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -48,13 +53,13 @@ int main() {
     if (!window) {
         std::cerr << "ERROR: could not open window with GLFW3" << std::endl;
         glfwTerminate ();
-        return EXIT_FAILURE;
+        std::exit (EXIT_FAILURE);
     }
     
     glewExperimental = GL_TRUE;
     if (glewInit () != GLEW_OK) {
         std::cerr << "ERROR: could not start GLEW" << std::endl;
-        return EXIT_FAILURE;
+        std::exit (EXIT_FAILURE);
     }
     
     renderer = glGetString (GL_RENDERER);
@@ -95,5 +100,5 @@ int main() {
         glfwSwapBuffers (window);
     }
     glfwTerminate ();
-    return EXIT_SUCCESS;
+    std::exit (EXIT_SUCCESS);
 }
