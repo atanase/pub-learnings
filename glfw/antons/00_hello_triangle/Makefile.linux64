@@ -1,5 +1,5 @@
 BIN     = build/hello_triangle
-CC      = g++
+CC      = clang++-3.6
 FLAGS   = -Wall -pedantic -std=c++11
 INC     = -I ../common/include
 LOC_LIB = ../common/lib/libglfw3.a ../common/lib/libGLEW.a
