@@ -1,31 +1,17 @@
-#include <iostream>
-#include <cstdlib>
-
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-
-// GLFW
-#include <GLFW/glfw3.h>
-
-#include "Shader.hpp"
-
-
+#include "main.hpp"
 
 int main()
 {
     GLFWwindow *window = nullptr;
-
-    GLuint vao;
-    GLuint vbo;
-
-	GLfloat points[] = {
-         0.0f,  0.5f,  0.0f,
-         0.5f, -0.5f,  0.0f,
-         -0.5f, -0.5f,  0.0f
+    
+    enum {num_vertices = 9};
+    GLfloat *vertices = new GLfloat[num_vertices]{
+        0.0f,  0.5f,  0.0f,
+        0.5f, -0.5f,  0.0f,
+        -0.5f, -0.5f,  0.0f
     };
 
-    // GLFW initialization
+    // initializes GLFW
     if (!glfwInit ())
     {
         std::cerr << "ERROR: could not start GLFW3" << std::endl;
@@ -47,7 +33,7 @@ int main()
         std::exit (EXIT_FAILURE);
     }
     
-    // GLEW initialization
+    // initializes GLEW
     glewExperimental = GL_TRUE;
     if (glewInit () != GLEW_OK)
     {
@@ -55,40 +41,54 @@ int main()
         std::exit (EXIT_FAILURE);
     }
  
-    // output: renderer and version 
+    // shows renderer and version 
     const GLubyte *renderer;
     const GLubyte *version;
     renderer = glGetString (GL_RENDERER);
-    version = glGetString (GL_VERSION);
+    version  = glGetString (GL_VERSION);
     std::cout << "Renderer: " << renderer << std::endl;
     std::cout << "OpenGL version supported " << version << std::endl;
 
     glEnable (GL_DEPTH_TEST);
     glDepthFunc (GL_LESS);
 
-    glGenBuffers (1, &vbo);
-    glBindBuffer (GL_ARRAY_BUFFER, vbo);
-    glBufferData (GL_ARRAY_BUFFER, 9 * sizeof (GLfloat), points, GL_STATIC_DRAW);
+    // creates VAO
+    enum VAO_IDs {Triangles, NumVAOs};
+    GLuint *vaos = new GLuint[NumVAOs];
+    glGenVertexArrays (NumVAOs, vaos);
+    glBindVertexArray (vaos[Triangles]);
+    glEnableVertexAttribArray(0);
 
-    glGenVertexArrays (1, &vao);
-    glBindVertexArray (vao);
-    glEnableVertexAttribArray (0);
-    glBindBuffer (GL_ARRAY_BUFFER, vbo);
+    // creates VBO
+    enum VBO_IDs {Buffer1, NumVBOs};
+    GLuint *vbos = new GLuint[NumVBOs];
+    glGenBuffers (NumVBOs, &vbos[Buffer1]);
+    glBindBuffer (GL_ARRAY_BUFFER, vbos[Buffer1]);
+    glBufferData (GL_ARRAY_BUFFER, 
+                  sizeof (GLfloat) * num_vertices, 
+                  vertices, 
+                  GL_STATIC_DRAW);
     glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    
-    // attach shaders
+
+    // attaches shaders
     Shader shader("shaders/base.vert", "shaders/base.frag");
 
     while (!glfwWindowShouldClose (window))
     {
         glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use ();
-        glBindVertexArray (vao);
+        glBindVertexArray (vaos[Triangles]);
         glDrawArrays (GL_TRIANGLES, 0, 3);
         glfwPollEvents ();
         glfwSwapBuffers (window);
+        glBindVertexArray (0);
     }
     
     glfwTerminate ();
+    glEnableVertexAttribArray (0);
+    glBindVertexArray (0);
+    delete [] vaos;
+    delete [] vbos;
+    delete [] vertices;
     std::exit (EXIT_SUCCESS);
 }
