@@ -1,0 +1,9 @@
+/*
+!/*.lhs
+!/.gitignore
+build/
+
+
+*.o
+*.hi
+
