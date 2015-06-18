@@ -1,0 +1,10 @@
+/*
+!/*.hs
+!/.gitignore
+build/
+.cabal-sandbox/
+cabal.sandbox.config
+
+*.o
+*.hi
+
