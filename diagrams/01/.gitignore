@@ -2,6 +2,9 @@
 !/*.lhs
 !/.gitignore
 build/
+.cabal-sandbox/
+cabal.sandbox.config
+
 
 
 *.o
