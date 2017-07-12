@@ -1,9 +1,9 @@
 BIN     = build/hello_triangle
-CC      = clang++-3.6
-FLAGS   = -Wall -pedantic -std=c++11
+CC      = clang++
+FLAGS   = -Wall -pedantic -std=c++14
 INC     = -I ../common/include -I.
 LOC_LIB = ../common/lib/libglfw3.a ../common/lib/libGLEW.a
-SYS_LIB = -lGL -lGLU -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -lpthread
+SYS_LIB = -lGL -ldl -lGLU -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -lpthread
 SRC     = main.cpp
 
 all:
